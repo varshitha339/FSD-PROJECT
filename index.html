@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>ClassClockwork | Timetable studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="ClassClockwork home">
+          <span class="brand-mark">C<span>.</span></span>
+          <span class="brand-name">classclockwork<small>ACADEMIC PLANNER</small></span>
+        </a>
+
+        <div class="workspace-label">WORKSPACE</div>
+        <nav class="side-nav" aria-label="Main navigation">
+          <a class="nav-link active" href="#timetable"><span class="nav-icon">▦</span>Timetable</a>
+          <a class="nav-link" href="#resources"><span class="nav-icon">◈</span>Resources <span class="nav-count" id="resource-count">0</span></a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="semester-card">
+            <span class="semester-dot"></span>
+            <div><strong>Fall semester</strong><small>Academic year 2026–27</small></div>
+            <span class="more-dots">···</span>
+          </div>
+          <p>Made for calmer semesters.</p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs">Workspace <span>/</span> <strong>Timetable</strong></div>
+          <div class="topbar-right">
+            <span class="saved-state"><i></i> Saved locally</span>
+            <button class="avatar" type="button" aria-label="Administrator">A</button>
+          </div>
+        </header>
+
+        <section class="page-heading" id="timetable">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span>THE WEEK, WELL PLANNED</div>
+            <h1>Your timetable, <span>without the tangle.</span></h1>
+            <p class="page-description">Bring your people, rooms and classes together. We’ll take care of the clashes.</p>
+          </div>
+          <div class="heading-actions">
+            <button class="button button-quiet" id="calendar-button" type="button"><span class="button-icon">↧</span> Export .ics</button>
+            <button class="button button-quiet" id="print-button" type="button"><span class="button-icon">▤</span> Print / PDF</button>
+            <button class="button button-primary" id="generate-button" type="button"><span class="sparkle">✳</span> Generate timetable</button>
+          </div>
+        </section>
+
+        <section class="stats-row" aria-label="Schedule summary">
+          <article class="stat-card">
+            <span class="stat-icon purple">◷</span>
+            <div><span class="stat-label">SCHEDULED CLASSES</span><strong id="scheduled-stat">0 <small>of 0</small></strong></div>
+            <span class="stat-trend">this week</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon mint">✓</span>
+            <div><span class="stat-label">ACTIVE CLASHES</span><strong id="clash-stat">0</strong></div>
+            <span class="stat-status" id="clash-status">All clear</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon amber">▤</span>
+            <div><span class="stat-label">TEACHING HOURS</span><strong id="hours-stat">0 <small>hrs / week</small></strong></div>
+            <span class="stat-trend" id="workload-stat">Faculty workload</span>
+          </article>
+        </section>
+
+        <section class="schedule-panel">
+          <div class="panel-top">
+            <div>
+              <h2>Weekly overview</h2>
+              <p>Five days, six periods. Drag a class to make a change.</p>
+            </div>
+            <div class="view-controls">
+              <div class="segmented" role="group" aria-label="Schedule view">
+                <button class="segment active" id="batch-view-button" type="button">Batch view</button>
+                <button class="segment" id="faculty-view-button" type="button">Faculty view</button>
+              </div>
+              <select id="view-filter" aria-label="Select a batch"></select>
+            </div>
+          </div>
+
+          <div class="timetable-wrap">
+            <div class="time-header" id="time-header"></div>
+            <div id="timetable-grid" class="timetable-grid" aria-live="polite"></div>
+          </div>
+          <div class="grid-legend">
+            <span><i class="legend-dot purple-dot"></i>Lecture</span>
+            <span><i class="legend-dot mint-dot"></i>Laboratory</span>
+            <span><i class="legend-dot red-dot"></i>Clash detected</span>
+            <span class="drag-hint">↕ Drag classes to reschedule</span>
+          </div>
+          <div class="audit-strip" id="audit-strip" aria-live="polite"></div>
+        </section>
+
+        <section class="resources-section" id="resources">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-line"></span>YOUR BUILDING BLOCKS</div>
+              <h2>Academic resources</h2>
+              <p>Manage the people, courses and spaces in your schedule.</p>
+            </div>
+            <button class="text-button" id="reset-button" type="button">Restore sample data <span>↗</span></button>
+          </div>
+
+          <div class="resource-cards">
+            <article class="resource-card">
+              <div class="resource-card-head">
+                <span class="resource-icon course-icon">▧</span>
+                <div><h3>Subjects</h3><span id="subject-count">0 courses</span></div>
+              </div>
+              <form id="subject-form" class="resource-form">
+                <label>Course name<input name="name" required maxlength="60" placeholder="e.g. Data Structures"></label>
+                <div class="form-pair">
+                  <label>Batch<input name="batch" required maxlength="24" placeholder="e.g. CSE-A"></label>
+                  <label>Batch size<input name="students" type="number" min="1" max="500" required value="40"></label>
+                </div>
+                <label>Faculty<select name="facultyId" required></select></label>
+                <div class="form-pair">
+                  <label>Hours / week<input name="hours" type="number" min="1" max="18" required value="3"></label>
+                  <label>Class type<select name="kind"><option value="lecture">Lecture</option><option value="lab">Laboratory</option></select></label>
+                </div>
+                <label>Required equipment <span class="optional">(optional)</span><input name="equipment" placeholder="e.g. computers, networking kit"></label>
+                <button class="button button-outline" type="submit">+ Add subject</button>
+              </form>
+              <ul class="resource-list" id="subject-list"></ul>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-head">
+                <span class="resource-icon faculty-icon">♙</span>
+                <div><h3>Faculty</h3><span id="faculty-count">0 people</span></div>
+              </div>
+              <form id="faculty-form" class="resource-form">
+                <label>Faculty name<input name="name" required maxlength="50" placeholder="e.g. Dr. Maya Rao"></label>
+                <label>Weekly workload limit<input name="maxHours" type="number" min="1" max="40" required value="12"></label>
+                <fieldset class="availability-picker">
+                  <legend>Available days</legend>
+                  <div class="day-checks">
+                    <label><input type="checkbox" name="days" value="0" checked><span>M</span></label>
+                    <label><input type="checkbox" name="days" value="1" checked><span>T</span></label>
+                    <label><input type="checkbox" name="days" value="2" checked><span>W</span></label>
+                    <label><input type="checkbox" name="days" value="3" checked><span>T</span></label>
+                    <label><input type="checkbox" name="days" value="4" checked><span>F</span></label>
+                  </div>
+                </fieldset>
+                <button class="button button-outline" type="submit">+ Add faculty</button>
+              </form>
+              <ul class="resource-list" id="faculty-list"></ul>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-head">
+                <span class="resource-icon room-icon">⌂</span>
+                <div><h3>Classrooms</h3><span id="room-count">0 rooms</span></div>
+              </div>
+              <form id="room-form" class="resource-form">
+                <label>Room name<input name="name" required maxlength="40" placeholder="e.g. Science Lab 2"></label>
+                <label>Seating capacity<input name="capacity" type="number" min="1" max="1000" required value="40"></label>
+                <label>Equipment <span class="optional">(comma separated)</span><input name="equipment" placeholder="e.g. computers, projector"></label>
+                <button class="button button-outline room-submit" type="submit">+ Add classroom</button>
+              </form>
+              <ul class="resource-list" id="room-list"></ul>
+            </article>
+          </div>
+        </section>
+        <footer class="page-footer"><span>ClassClockwork</span><span>Good schedules leave room to breathe.</span></footer>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
